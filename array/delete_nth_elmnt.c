@@ -18,7 +18,7 @@ int main(){
 	scanf("%d", &index);
 	
 	if(index > len){
-		printf("\nenter valid index\(less than %d\): ", len);
+		printf("\nenter valid index(less than %d): ", len);
 		scanf("%d", &index);
 	}else{
 		for(i=index;i<len;i++){
