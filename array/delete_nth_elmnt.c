@@ -17,20 +17,20 @@ int main(){
 	printf("\nenter an index to delete: ");
 	scanf("%d", &index);
 	
-	if(index > len){
+	while(index > len){
 		printf("\nenter valid index(less than %d): ", len);
 		scanf("%d", &index);
-	}else{
-		for(i=index;i<len;i++){
-		A[i] = A[i+1];
-		}
-		len--;
-	
-		printf("\nafter deleting element at index %d array is: ", index);
-		for(i=0;i<len;i++){
-			printf("%d ", A[i]);
-		}	
 	}
+	
+	for(i=index;i<len;i++){
+		A[i] = A[i+1];
+	}
+	len--;
+	
+	printf("\nafter deleting element at index %d array is: ", index);
+	for(i=0;i<len;i++){
+		printf("%d ", A[i]);
+	}	
 		
 	return 0;
 }
