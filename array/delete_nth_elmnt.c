@@ -1,41 +1,36 @@
-#include <stdio.h>
-
-void delete_nth_elmnt(int *a, int size, int position);
+#include<stdio.h>
 
 int main(){
+	int i, A[10], len, index;
 	
-	int a[6],i, position;
-	for(i=0; i<6; i++){
-		printf("enter %dth element:", i);
-		scanf("%d", &a[i]);
+	for(i=0;i<10;i++){
+		A[i] = i;
 	}
-	printf("\nentred array is:");
-	for(i=0;i<6;i++){
-		printf(" %d ",a[i]);
+	
+	len = sizeof(A)/sizeof(A[0]);
+	
+	printf("\noriginal array is: ");
+	for(i=0;i<len;i++){
+		printf("%d ", A[i]);
 	}
-	printf("\n");
 	
-	printf("enter the position of an element to delete:");
-	scanf("%d", &position);
+	printf("\nenter an index to delete: ");
+	scanf("%d", &index);
 	
-	printf("array after deleting an element:");
-	delete_nth_elmnt(a, 6, position);
-	
-	return;
-}
-
-void delete_nth_elmnt(int *a, int size, int position){
-	int i;
-	
-	if(position > size){
-		printf("Deletion not possible\n");
+	if(index > len){
+		printf("\nenter valid index\(less than %d\): ", len);
+		scanf("%d", &index);
 	}else{
-		for(i=position-1; i<size; i++){
-			a[i] = a[i+1];
+		for(i=index;i<len;i++){
+		A[i] = A[i+1];
 		}
+		len--;
+	
+		printf("\nafter deleting element at index %d array is: ", index);
+		for(i=0;i<len;i++){
+			printf("%d ", A[i]);
+		}	
 	}
-	for(i=0; i<size-1; i++){
-		printf(" %d ", a[i]);
-	}
-	return;
+		
+	return 0;
 }
