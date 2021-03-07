@@ -1,186 +1,150 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
 
 struct node{
 	int data;
 	struct node *next;
-};
-struct node *head;
+}*head;
 
 void insert_at_beginning(int data);
-void print();
 void insert_at_end(int data);
-void insert_at_nth(int data, int n);
-void delete_nth_position(int position);
-void reverse_iterate();
-void reverse_recursive();
+void insert_nth_position(int data, int position);
+void print();
+void delete_nth_element(int position);
+void reverse();
+int find_middle();
+
 int main(){
-	head = NULL;	//empty list
-	int n, i, data, position;
-	printf("enter the no of elements in list:");
-	scanf("%d", &n);
-	
-	for(i =1; i<=n; i++){
-		printf("enter a list element:");
-		scanf("%d", &data);
-		insert_at_beginning(data);
-		print();	
+	int i;
+	head = NULL;
+
+	for(i=1;i<10;i++){
+		insert_at_end(i);
 	}
-	printf("\nfinal list is:");
-	print();
-	printf("enter an element to insert at end:");
-	scanf("%d", &data);
-	insert_at_end(data);
-	printf("list after inserting an element at end:");
-	print();
-	
-	printf("enter position and element:");
-	scanf("%d%d", &position,&data);
-	insert_at_nth(data, position);
-	printf("list after inserting an element at %d position:", position);
-	print();
 
-	int position_to_delete;
-	printf("enter the position to delete:\n");
-	scanf("%d", &position_to_delete);
-	printf("list before deletion:\n");
+	printf("\noriginal list is: ");
 	print();
-	delete_nth_position(position_to_delete);
-	printf("list after deletion:\n");
+	printf("\nafter insert 0 at beginning List is: ");
+	insert_at_beginning(0);
 	print();
+	printf("\nafter insert 0 at end List is: ");
+	insert_at_end(0);
+	print();
+	printf("\nafter insert 0 at position 1, List is: ");
+	insert_nth_position(0,1);
+	print();
+	printf("\nafter deleting 2nd position element, List is: ");
+	delete_nth_element(2);
+	print();
+	printf("\nreverse of the list is: ");
+	reverse();
+	print();
+	printf("\nmiddle element of List is: %d\n", find_middle());
 
-	printf("before reverse call\n");
-	print();
-	reverse_iterate();
-	printf("after reverse call:\n");
-	print();
-
-	printf("after reverse_recursive call: ");
-	reverse_recursive();
-	print();
 	return 0;
 }
 
-void insert_at_beginning(int data){
+void insert_at_end(int data){
 	struct node *new = (struct node *)malloc(sizeof(struct node));
 	new->data = data;
 	new->next = NULL;
-	
+
 	if(head == NULL){
 		head = new;
-	}else{
-		new->next = head;
-		head = new;
-	}	
+		return;
+	}
+
+	struct node *tmp = head;
+	while(tmp->next != NULL){
+		tmp = tmp->next;
+	}
+
+	tmp->next = new;
+
 	return;
 }
 
-void insert_at_end(int data){
-	struct node *new = (struct node*)malloc(sizeof(struct node));
-	new->data = data;
-	new->next = NULL;
-	struct node *tmp = head;
-	
+void print(){
 	if(head == NULL){
-		head = new;	
-	}else{
-		while(tmp->next != NULL){
-			tmp = tmp->next;
-		}
-		tmp->next = new;
+		printf("\nList is Empty!\n");
+		return;
+	}
+
+	struct node *tmp = head;
+
+	while(tmp != NULL){
+		printf("%d ", tmp->data);
+		tmp = tmp->next;
 	}
 	return;
 }
 
-void insert_at_nth(int data, int n){
-	struct node *new = (struct node *)malloc(sizeof(struct node));
+void insert_at_beginning(int data){
+	struct node *new = (struct node*)malloc(sizeof(struct node));
 	new->data = data;
 	new->next = NULL;
+
+	if(head == NULL){
+		head = new;
+		return;
+	}
+
+	new->next = head;
+	head = new;
+
+	return;
+}
+
+void insert_nth_position(int data, int position){
+	struct node *new = (struct node*)malloc(sizeof(struct node));
+	new->data = data;
+	new->next = NULL;
+	
 	struct node *tmp = head;
 	int i;
-	for(i=0; i<n-2; i++){
+	for(i=1;i<position-1;i++){
 		tmp = tmp->next;
 	}
 	new->next = tmp->next;
 	tmp->next = new;
-	
+
 	return;
 }
-void print(){
-	struct node *tmp = head;
-	if(tmp == NULL){
-		printf("list is empty, please insert elements into list\n");
+
+void reverse(){
+	if(head == NULL){
+		return;
 	}
-	printf("list is:");
-	while(tmp != NULL){
-		printf("%d", tmp->data);
+
+	struct node *prev = NULL, *cur = head, *next;
+	while(cur != NULL){
+		next = cur->next;
+		cur->next = prev;
+		prev = cur;
+		cur = next;
+	}
+	head = prev;
+	return;
+}
+
+void delete_nth_element(int position){
+	int i;
+	struct node *tmp = head;
+	for(i=1;i<position;i++){
 		tmp = tmp->next;
 	}
-	printf("\n");
+	struct node *tmp1 = tmp->next;
+	tmp->next = tmp1->next;
+	free(tmp1);
 	return;
 }
 
-void delete_nth_position(int position){
-	int i;
-	struct node *tmp1, *tmp2;
-	tmp1 = head;
-	if(position == 1){
-		head = tmp1->next;
-		free(tmp1);
-		return ;
+int find_middle(){
+	struct node *slow_ptr = head, *fast_ptr = head;
+	
+	while(fast_ptr->next != NULL){
+		slow_ptr = slow_ptr->next;
+		fast_ptr = fast_ptr->next->next;
 	}
-	for(i=1;i<=position-1;i++){
-		tmp1 = tmp1->next;
-	}
-	tmp2 = tmp1->next;
-	tmp1->next = tmp2->next;
-	free(tmp2);
-	return;
-}
-
-void reverse_iterate(){
-	struct node *previous, *current, *next;
-	current = head;
-	previous = NULL;
-	while(current != NULL){
-		next = current->next;
-		current->next = previous;
-		previous = current;
-		current = next;
-	}
-	head = previous;
-	return;
-}
-
-/*
-To print linked list in forward and reverse order using recursion without reversing the list actually
-void print_forward(){
-	struct node *tmp = head;
-	if(tmp == NULL){
-		return;
-	}
-	printf("%d ", tmp->data);
-	print_forward();
-}
-
-void print_reverse(){
-	struct node* tmp = head;
-	if(tmp == NULL){
-		return;
-	}
-	print_revese();
-	printf("%d ", tmp->data);
-}
-*/
-
-void reverse_recursive(){
-	struct node *tmp1 = head;
-	if(tmp1->next == NULL){
-		head = tmp1;
-		return;
-	}
-	reverse_iterate(tmp1->next);
-	struct node *tmp2 = tmp1->next;
-	tmp2->next = tmp1;
-	tmp1->next = NULL;
+	return slow_ptr->data;
 }
